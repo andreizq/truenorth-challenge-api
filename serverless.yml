@@ -1,0 +1,114 @@
+org: andreizq
+app: truenorth-challenge-api
+service: truenorth-challenge-api
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - arn:aws:dynamodb:us-east-1:510351040559:table/usersTable
+        - arn:aws:dynamodb:us-east-1:510351040559:table/operationsTable
+        - arn:aws:dynamodb:us-east-1:510351040559:table/recordsTable
+        - arn:aws:dynamodb:us-east-1:510351040559:table/recordsTable/index/UserIdIndex
+  httpApi:
+    cors:
+      allowedOrigins:
+        - http://localhost:3000
+        - http://true-north-challenge-app-bucket.s3-website-us-east-1.amazonaws.com
+      allowedHeaders:
+        - Content-Type
+        - Authorization
+      allowedMethods:
+        - GET
+        - POST
+        - DELETE
+        - OPTIONS
+      allowCredentials: true
+functions:
+  auth:
+    handler: src/auth.handler
+    events:
+      - httpApi:
+          path: /register
+          method: post
+      - httpApi:
+          path: /login
+          method: post
+  app:
+    handler: src/app.handler
+    events:
+      - httpApi:
+          path: /records
+          method: post
+      - httpApi:
+          path: /records
+          method: get
+      - httpApi:
+          path: /records/{id}
+          method: delete
+
+resources: # CloudFormation template syntax from here on.
+  Resources:
+    usersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: usersTable
+        AttributeDefinitions:
+          - AttributeName: username
+            AttributeType: S
+        KeySchema:
+          - AttributeName: username
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    operationsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: operationsTable
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    recordsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: recordsTable
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: user_id
+            AttributeType: S
+          - AttributeName: date
+            AttributeType: N
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: UserIdIndex
+            KeySchema:
+              - AttributeName: user_id
+                KeyType: HASH
+              - AttributeName: date
+                KeyType: RANGE
+            Projection:
+              ProjectionType: 'ALL'
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+plugins:
+  - serverless-python-requirements
