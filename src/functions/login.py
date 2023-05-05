@@ -10,7 +10,7 @@ def login(user):
     if not username or not password:
         return util.build_response(401, {"message": "username and password is required"})
 
-    dynamoUser = userDB.get_user(username)
+    dynamoUser = userDB.get_user(username.lower())
     if not dynamoUser or not dynamoUser.get("username"):
         return util.build_response(401, {"message": "Incorrect credentials"})
 
