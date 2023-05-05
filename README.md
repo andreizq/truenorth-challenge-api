@@ -32,7 +32,7 @@ Running the above will automatically add `serverless-python-requirements` to `pl
 
 #### Register
 
-    URL: https://6m3u95thz4.execute-api.us-east-1.amazonaws.com/register
+    URL: https://sbhnbx5vf7.execute-api.us-east-1.amazonaws.com/register
     Method: POST
 Request example:
 ```json
@@ -52,7 +52,7 @@ Response example:
 
 #### Login
 
-    URL: https://6m3u95thz4.execute-api.us-east-1.amazonaws.com/login
+    URL: https://sbhnbx5vf7.execute-api.us-east-1.amazonaws.com/login
     Method: POST
 Request example:
 ```json
@@ -72,7 +72,7 @@ Response example:
 
 #### Perform Operation
 
-    URL: https://6m3u95thz4.execute-api.us-east-1.amazonaws.com/records
+    URL: https://sbhnbx5vf7.execute-api.us-east-1.amazonaws.com/records
     Method: POST
     Auth: Bearer token
 Request example:
@@ -99,7 +99,7 @@ Response example:
 
 #### User Records
 
-    URL: https://6m3u95thz4.execute-api.us-east-1.amazonaws.com/records
+    URL: https://sbhnbx5vf7.execute-api.us-east-1.amazonaws.com/records
     Method: GET
     Auth: Bearer token
 Success Response:
@@ -128,7 +128,7 @@ Success Response:
 
 #### Delete Record
 
-    URL: https://6m3u95thz4.execute-api.us-east-1.amazonaws.com/records/{id}
+    URL: https://sbhnbx5vf7.execute-api.us-east-1.amazonaws.com/records/{id}
     Method: DELETE
     Auth: Bearer token
 Success Response:
